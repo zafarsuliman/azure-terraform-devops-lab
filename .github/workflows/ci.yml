@@ -17,7 +17,7 @@ jobs:
       - run: pytest
       - run: pip-audit -r requirements.txt
       - uses: docker/setup-buildx-action@v3
-      - uses: docker/build-push-action@v6
+      - uses: docker/build-push-action@v7
         with: { context: ., push: false, tags: task-api:test }
   terraform:
     runs-on: ubuntu-latest
