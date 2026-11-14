@@ -6,7 +6,7 @@
 
 A production-minded task API that demonstrates Python API engineering, persistent storage, containerisation, Azure infrastructure as code, observability and controlled CI/CD. It runs locally without an Azure account; Terraform is declarative and **does not provision resources unless an operator explicitly applies it**.
 
-**Status:** portfolio lab, locally verified on 14 November 2026. See [VERIFICATION.md](VERIFICATION.md) for commands, results and boundaries.
+**Status:** API tests and lint verified locally on 14 November 2026; Docker and Azure deployment are not verified. See [VERIFICATION.md](VERIFICATION.md).
 
 ## Architecture
 
@@ -19,7 +19,7 @@ flowchart LR
   TF[Terraform] --> RG[Tagged Azure resources]
 ```
 
-The deliberately small API exposes typed CRUD endpoints, `/health`, `/ready`, OpenAPI at `/docs`, request IDs and JSON logs. SQLite keeps local operation simple; Azure Files supplies persistent storage in the lab topology. For multi-instance production throughput, migrate to Azure Database for PostgreSQL.
+The deliberately small API exposes typed CRUD endpoints, `/health`, `/ready`, OpenAPI at `/docs`, request IDs and JSON logs. SQLite keeps local operation simple; the Terraform topology defines Azure Files for persistent storage. For multi-instance production throughput, a managed relational database would be a production follow-up.
 
 ## Run locally
 
@@ -30,7 +30,7 @@ pip install -r requirements.txt
 uvicorn app.main:app --reload
 ```
 
-Open `http://127.0.0.1:8000/docs`. Run verification with `pytest` and `ruff check app tests`. Docker users can run `docker build -t task-api .` then `docker run --rm -p 8000:8000 -v task-data:/data -e DATABASE_PATH=/data/tasks.db task-api`.
+Open `http://127.0.0.1:8000/docs`. Run verification with `pytest` and `ruff check app tests`. The included but currently unverified Docker path is `docker build -t task-api .` followed by `docker run --rm -p 8000:8000 -v task-data:/data -e DATABASE_PATH=/data/tasks.db task-api`.
 
 ## API example
 
@@ -45,7 +45,7 @@ curl http://127.0.0.1:8000/tasks
 
 ## CI/CD and rollback
 
-Pull requests lint, test, audit dependencies, build the image, validate Terraform and run Checkov. Deployment is intentionally gated behind the `production` environment and remains a documented placeholder until Azure OIDC is configured. Use immutable image digests. Roll back by restoring the previous digest and applying a reviewed plan; database backups must be restored separately if a migration is incompatible.
+The GitHub Actions workflow defines lint, test, dependency-audit, image-build, Terraform-validation and Checkov steps. A hosted workflow run is not yet verified. Deployment is gated behind the `production` environment and remains a placeholder until Azure OIDC is configured.
 
 ## Evidence and limitations
 
@@ -55,7 +55,7 @@ For an interview walkthrough, use [TWO_MINUTE_DEMO.md](TWO_MINUTE_DEMO.md).
 
 ## Recruiter evidence
 
-- Desktop and mobile screenshots show the real local OpenAPI interface.
+- Desktop and mobile screenshots of the local OpenAPI interface are included.
 - Automated API tests and Ruff checks pass locally.
 - Terraform formatting, initialization and validation evidence is recorded without provisioning Azure resources.
 - [ARCHITECTURE.md](ARCHITECTURE.md), [INTERVIEW_GUIDE.md](INTERVIEW_GUIDE.md) and [TWO_MINUTE_DEMO.md](TWO_MINUTE_DEMO.md) support a short technical review.
