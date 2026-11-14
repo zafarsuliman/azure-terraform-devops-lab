@@ -1,0 +1,4 @@
+[
+  {"title": "Review infrastructure plan", "description": "Confirm cost, policy and security changes before apply", "status": "todo"},
+  {"title": "Run deployment smoke test", "description": "Verify health, readiness and CRUD workflow", "status": "in_progress"}
+]

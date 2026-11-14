@@ -1,0 +1,15 @@
+.venv/
+.clean-venv/
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+*.pyc
+data/*.db
+.terraform/
+*.tfstate*
+*.tfvars
+crash.log
+*.log
+*.egg-info/
+build/
+dist/
